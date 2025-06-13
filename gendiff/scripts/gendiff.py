@@ -9,7 +9,7 @@ def main():
     )
     parser.add_argument('first_file')
     parser.add_argument('second_file')
-    parser.print_help()
-    
+    parser.parse_args()
+
 if __name__ == '__main__':
     main()
