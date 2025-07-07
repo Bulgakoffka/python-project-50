@@ -25,17 +25,25 @@ def generate_diff(file_path1, file_path2):
             case (False, True):
                 diff_dict[f'+ {k}'] = v
 
-    diff_dict = sorted(diff_dict, key=lambda x: )
-    diff_gen = {f'{k}: {v}' for k, v in diff_dict.items()}
-    diff_string = '{\n' + '\n'.join(diff_gen) + '\n}`'
+
+    def keyorder(tpl):
+        key = tpl[0]
+        name = key[2:]
+        order = ['  ', '- ', '+ ']
+        for index, order_prefix in enumerate(order):
+            if key.startswith(order_prefix):
+                return (name, index)
+
+    diff_dict = dict(sorted(diff_dict.items(), key=keyorder))
+    diff_gen = [f'{k}: {v}' for k, v in diff_dict.items()]
+    diff_string = '{\n' + '\n'.join(diff_gen) + '\n}'
     return diff_string
 
 
 if __name__ == "__main__":
     from pathlib import Path
 
-    # Абсолютные пути к JSON-файлам
-    base_path = Path(__file__).resolve().parent.parent.parent  # поднимаемся на 3 уровня до корня проекта
+    base_path = Path(__file__).resolve().parent.parent.parent
     file1 = base_path / "tests" / "test_data" / "file1.json"
     file2 = base_path / "tests" / "test_data" / "file2.json"
 
