@@ -1,6 +1,5 @@
-import pytest
 from pathlib import Path
-from gendiff.scripts.generate_diff import generate_diff
+from gendiff.modules.generate_diff import generate_diff
 
 def test_generate_diff():
     base_path = Path(__file__).resolve().parent.parent

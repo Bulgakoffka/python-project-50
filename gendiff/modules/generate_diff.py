@@ -1,16 +1,9 @@
-import json
-
-
-def get_json(file_path: str):
-    with open(file_path) as file:
-        json_opened = json.load(file)
-    return json_opened
-
+from parser import parser
 def generate_diff(file_path1, file_path2):
     diff_dict = {}
     diff_string = ''
-    parsed_file1 = get_json(file_path1)
-    parsed_file2 = get_json(file_path2)
+    parsed_file1 = parser(file_path1)
+    parsed_file2 = parser(file_path2)
     joined_files = {**parsed_file1, **parsed_file2}
     for k, v in joined_files.items():
         match (k in parsed_file1, k in parsed_file2):
