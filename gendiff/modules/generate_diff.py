@@ -1,4 +1,6 @@
 from parser import parser
+
+
 def generate_diff(file_path1, file_path2):
     diff_dict = {}
     diff_string = ''
@@ -17,7 +19,6 @@ def generate_diff(file_path1, file_path2):
                 diff_dict[f'- {k}'] = v
             case (False, True):
                 diff_dict[f'+ {k}'] = v
-
 
     def keyorder(tpl):
         key = tpl[0]

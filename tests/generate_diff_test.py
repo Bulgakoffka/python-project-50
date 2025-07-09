@@ -1,5 +1,7 @@
 from pathlib import Path
+
 from gendiff.modules.generate_diff import generate_diff
+
 
 def test_generate_diff():
     base_path = Path(__file__).resolve().parent.parent
