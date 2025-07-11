@@ -1,5 +1,5 @@
 import argparse as ap
-
+from gendiff.modules.generate_diff import generate_diff
 # позже посмотреть требования проекта к названиям файлов.
 #  если нет, то переименовать в main
 
@@ -18,11 +18,11 @@ def parser_function():
 
 
 def main():
-    # args = parser_function()
-    # first_file = args.first_file
-    # second_file = args.second_file
-    ...
+    args = parser_function()
+    first_file = args.first_file
+    second_file = args.second_file
+    return generate_diff(first_file, second_file)
 
 
 if __name__ == '__main__':
-    ...
+    main()
