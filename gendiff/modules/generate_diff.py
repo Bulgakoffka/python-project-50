@@ -1,11 +1,11 @@
-from parser import parser
+from gendiff.modules.file_parser import parser
 
 
-def generate_diff(file_path1, file_path2):
+def generate_diff(file1, file2):
     diff_dict = {}
     diff_string = ''
-    parsed_file1 = parser(file_path1)
-    parsed_file2 = parser(file_path2)
+    parsed_file1 = parser(file1)
+    parsed_file2 = parser(file2)
     joined_files = {**parsed_file1, **parsed_file2}
     for k, v in joined_files.items():
         match (k in parsed_file1, k in parsed_file2):
