@@ -1,5 +1,7 @@
 import argparse as ap
+
 from gendiff.modules.generate_diff import generate_diff
+
 # позже посмотреть требования проекта к названиям файлов.
 #  если нет, то переименовать в main
 
