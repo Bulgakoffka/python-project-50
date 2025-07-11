@@ -1,12 +1,12 @@
-import argparse as ap # pragma: no cover
+import argparse as ap  # pragma: no cover
 
-from gendiff.modules.generate_diff import generate_diff # pragma: no cover
+from gendiff.modules.generate_diff import generate_diff  # pragma: no cover
 
 # позже посмотреть требования проекта к названиям файлов.
 #  если нет, то переименовать в main
 
 
-def parser_function(): # pragma: no cover
+def parser_function():  # pragma: no cover
     parser = ap.ArgumentParser(
                     prog='gendiff',
                     description='Compares two configuration' 
@@ -19,7 +19,7 @@ def parser_function(): # pragma: no cover
     return parser.parse_args()
 
 
-def main(): # pragma: no cover
+def main():  # pragma: no cover
     args = parser_function()
     first_file = args.first_file
     second_file = args.second_file

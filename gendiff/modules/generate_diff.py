@@ -35,7 +35,7 @@ def generate_diff(file1, file2):
 
 
 if __name__ == "__main__":
-    from pathlib import Path # pragma: no cover
+    from pathlib import Path  # pragma: no cover
 
     base_path = Path(__file__).resolve().parent.parent.parent
     file1 = base_path / "tests" / "test_data" / "file1.json"
