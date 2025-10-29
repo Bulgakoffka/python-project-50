@@ -12,7 +12,7 @@ def main():  # pragma: no cover
     first_file = load_file(args.first_file)
     second_file = load_file(args.second_file)
     format_name = args.format_name
-    if format_name == 'stylish':
+    if format_name:
         return generate_diff(first_file, second_file, format_name)
 
 

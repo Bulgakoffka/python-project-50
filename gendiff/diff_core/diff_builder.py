@@ -6,12 +6,10 @@ from gendiff.diff_core.diff_actions import (
     diff_unchanged,
 )
 from gendiff.formatters.stylish import stylish
+from gendiff.formatters.plain import plain
 from gendiff.parser import load_file
 
-# 17/10
-# проблемы, которые не решены на данный момент:
-# 1) опускаясь на уровень вложенности возвращается только первая пара из всех
-# 2) как минимум при модиф. паре значение, если оно тоже словарь, не стайлишируется
+
 def get_node(status, name, value, value2=None, children=None):
     node = {'status': status, 'name': name}
     if children != None:
@@ -64,10 +62,10 @@ def generate_diff(file1: dict, file2: dict, format_name='stylish'):
         result = []
         keys_set1 = set(inner_file1.keys())
         keys_set2 = set(inner_file2.keys())
-        united_keys = sorted(keys_set1 | keys_set2) #a = {1, 2, 3} b = {2, 3, 4} c = {1, 2, 3, 4}
-        intercepted_keys = sorted(keys_set1 & keys_set2) #a = {1, 2, 3} b = {2, 3, 4} c = {2, 3}
-        only_first_keys = sorted(keys_set1 - keys_set2) #a = {1, 2, 3} b = {2, 3, 4} c = {1}
-        only_second_keys = sorted(keys_set2 - keys_set1)  #a = {1, 2, 3} b = {2, 3, 4} c = {4}
+        united_keys = sorted(keys_set1 | keys_set2) 
+        intercepted_keys = sorted(keys_set1 & keys_set2) 
+        only_first_keys = sorted(keys_set1 - keys_set2) 
+        only_second_keys = sorted(keys_set2 - keys_set1)  
         for key in united_keys:
             if key in only_first_keys:
                 result.append(diff_deleted(key, inner_file1[key]))
@@ -85,8 +83,8 @@ def generate_diff(file1: dict, file2: dict, format_name='stylish'):
     match format_name:
         case 'stylish':
             return stylish(get_json_standarted(wrapper(file1, file2)))
-        case _:
-            ...
+        case 'plain':
+            return plain(get_json_standarted(wrapper(file1, file2)))
 
 
 if __name__ == "__main__":
@@ -98,5 +96,5 @@ if __name__ == "__main__":
 
     parsed_file1 = dict(load_file(file1))
     parsed_file2 = dict(load_file(file2))
-    print(generate_diff(parsed_file1, parsed_file2))
+    print(generate_diff(parsed_file1, parsed_file2, 'plain'))
 
