@@ -98,6 +98,6 @@ def test_generate_diff_yaml(get_yaml, get_answer1):
     assert generate_diff(file1, file2) == get_answer1
 
 
-def test_generate_diff_yaml_recursive(get_json, get_answer2):
+def test_generate_diff_yaml_recursive(get_yaml, get_answer2):
     _, _, file3, file4 = get_yaml
     assert generate_diff(file3, file4) == get_answer2
