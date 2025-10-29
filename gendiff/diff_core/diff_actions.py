@@ -18,9 +18,6 @@ def diff_deleted(key, value):
 
 def diff_modified(key, value1, value2, func):
     result = dict()
-    # здесь мы вызывали ошибку вот этой строчкой 
-    # print(1111, func(value1, value2))
-    print('d_mod', f'{value1=}, {value2=}  \n {"*" * 10}')
     result = {"status": "modified", "name": key, 'old_value': value1, 'new_value': value2}
     if isinstance(value1, dict) and isinstance(value2, dict):
         result['old_value'] = func(value1, value1)[0]
@@ -28,10 +25,6 @@ def diff_modified(key, value1, value2, func):
     else:
         result['old_value'] = value1
         result['new_value'] = value2
-    # if isinstance(value2, dict):
-    #     result['new_value'] = func(value1, value2)[0]
-    # else:
-    #     result['new_value'] = value2
     return result
     
 

@@ -1,7 +1,6 @@
 import argparse as ap  # pragma: no cover
 
 from gendiff.diff_core.diff_builder import generate_diff
-from gendiff.formatters.stylish import stylish
 from gendiff.parser import arg_parser, load_file  # pragma: no cover
 
 # позже посмотреть требования проекта к названиям файлов.
@@ -14,7 +13,7 @@ def main():  # pragma: no cover
     second_file = load_file(args.second_file)
     format_name = args.format_name
     if format_name == 'stylish':
-        return stylish(generate_diff(first_file, second_file))
+        return generate_diff(first_file, second_file, format_name)
 
 
 if __name__ == "__main__":
