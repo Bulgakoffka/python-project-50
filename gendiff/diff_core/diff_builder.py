@@ -7,6 +7,7 @@ from gendiff.diff_core.diff_actions import (
 )
 from gendiff.formatters.stylish import stylish
 from gendiff.formatters.plain import plain
+from gendiff.formatters.json import json
 from gendiff.parser import load_file
 
 
@@ -85,6 +86,8 @@ def generate_diff(file1: dict, file2: dict, format_name='stylish'):
             return stylish(get_json_standarted(wrapper(file1, file2)))
         case 'plain':
             return plain(get_json_standarted(wrapper(file1, file2)))
+        case 'json':
+            return json(get_json_standarted(wrapper(file1, file2)))
 
 
 if __name__ == "__main__":
