@@ -35,7 +35,6 @@ def stylish(diff, depth=0):
             elif not f_value.get("children"):
                 if isinstance(f_value.get("value"), dict):
                     result = []
-                    # 21/10 луп почему-то берет побуквенно ключи и значения
                     for inner_k, inner_v in f_value["value"].items():
                         new_val = diff_unchanged(inner_k, inner_v)
                         result.append(new_val)
