@@ -1,4 +1,3 @@
-import argparse as ap  # pragma: no cover
 
 from gendiff.diff_core.diff_builder import generate_diff
 from gendiff.parser import arg_parser, load_file  # pragma: no cover

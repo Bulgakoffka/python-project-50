@@ -28,9 +28,8 @@ def plain(diff):
                 addition = f' with value: {formatted_value1}\n'
         line = f"Property '{node_path}' was {status}{addition}"
         return line
-
-    iterator = iter(range(1, 999))
     path = []
+
     def wrapper(inner_diff, path):
         
         if isinstance(inner_diff, list):

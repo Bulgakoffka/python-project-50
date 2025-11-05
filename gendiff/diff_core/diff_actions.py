@@ -18,7 +18,8 @@ def diff_deleted(key, value):
 
 def diff_modified(key, value1, value2, func):
     result = dict()
-    result = {"status": "modified", "name": key, 'old_value': value1, 'new_value': value2}
+    result = {"status": "modified", "name": key, 'old_value': value1,
+               'new_value': value2}
     if isinstance(value1, dict) and isinstance(value2, dict):
         result['old_value'] = func(value1, value1)[0]
         result['new_value'] = func(value2, value2)[0]

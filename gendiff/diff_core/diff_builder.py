@@ -5,15 +5,15 @@ from gendiff.diff_core.diff_actions import (
     diff_nested,
     diff_unchanged,
 )
-from gendiff.formatters.stylish import stylish
-from gendiff.formatters.plain import plain
 from gendiff.formatters.json import json
+from gendiff.formatters.plain import plain
+from gendiff.formatters.stylish import stylish
 from gendiff.parser import load_file
 
 
 def get_node(status, name, value, value2=None, children=None):
     node = {'status': status, 'name': name}
-    if children != None:
+    if children is not None:
         node['children'] = children
     if status == 'modified':
         node['old_value'] = value
@@ -49,7 +49,8 @@ def get_json_standarted(node):
         children = node.get('children')
         if not children:
             if status == 'modified':
-                return get_node(status, name, standart_value(old_value), standart_value(new_value))
+                return get_node(status, name, standart_value(old_value),
+                                 standart_value(new_value))
             return get_node(status, name, standart_value(value))
         else:
             new_children = []
@@ -73,13 +74,19 @@ def generate_diff(file1: dict, file2: dict, format_name='stylish'):
             elif key in only_second_keys:
                 result.append(diff_added(key, inner_file2[key]))
             elif key in intercepted_keys:
-                if isinstance(inner_file1[key], dict) and isinstance(inner_file2[key], dict):
-                    result.append(diff_nested(key, inner_file1[key], inner_file2[key], wrapper))
+                if isinstance(inner_file1[key],
+                               dict) and isinstance(inner_file2[key], dict):
+                    result.append(diff_nested(key,
+                                               inner_file1[key],
+                                                 inner_file2[key], wrapper))
                 else:
                     if inner_file1[key] == inner_file2[key]:
                         result.append(diff_unchanged(key, inner_file1[key]))
                     else:
-                        result.append(diff_modified(key, inner_file1[key], inner_file2[key], wrapper))
+                        result.append(diff_modified(key,
+                                                     inner_file1[key],
+                                                       inner_file2[key],
+                                                         wrapper))
         return result
     match format_name:
         case 'stylish':

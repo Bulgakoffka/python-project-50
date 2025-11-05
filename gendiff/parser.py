@@ -1,8 +1,10 @@
-from argparse import ArgumentParser
 import json
 import os
+from argparse import ArgumentParser
 from pathlib import Path
+
 import yaml
+
 
 # парсер не может принять null значение, возвращает только None
 def load_file(file_name: str):
@@ -22,7 +24,7 @@ def load_file(file_name: str):
 def arg_parser():  # pragma: no cover
     parser = ArgumentParser(
         prog="gendiff",
-        description="Compares two configuration" " files and shows a difference.",
+        description="Compares two configuration files and shows a difference.",
         usage="gendiff [-h] first_file second_file format_name",
     )
     parser.add_argument("-f", "--format", help="set format of output")

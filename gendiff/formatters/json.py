@@ -1,12 +1,12 @@
 from gendiff.diff_core.diff_actions import diff_unchanged
 
-
 REPLACER = " "
 SPACES_COUNT = 4
 
+
 def get_node(status, name, value, value2=None, children=None):
     node = {'status': status, 'name': name}
-    if children != None:
+    if children is not None:
         node['children'] = children
     if status == 'modified':
         node['old_value'] = value
@@ -16,12 +16,10 @@ def get_node(status, name, value, value2=None, children=None):
     return node
 
 
-
-
 def json(diff, depth=0):
-    result = ""
     # здесь мы пригоняем в нужный вид value из диффа
-    # (либо возвращаем в нужном состоянии либо запускаем рекурсию для разворота вложенности)
+    # (либо возвращаем в нужном состоянии либо запускаем рекурсию
+    #  для разворота вложенности)
     def format_value(f_value, f_depth):
         if isinstance(f_value, dict):
             if f_value.get("status") == "modified":
@@ -53,7 +51,8 @@ def json(diff, depth=0):
                         return result
                     else:
                         for k, v in f_value.items():
-                            return main_format(get_node('unchanged', k, v), f_depth)
+                            return main_format(get_node('unchanged',
+                                                         k, v), f_depth)
         elif isinstance(f_value, (int)):
             return f_value
         elif isinstance(f_value, str):
@@ -64,8 +63,6 @@ def json(diff, depth=0):
                     return f_value
             return f'"{f_value}"'
             
-        
-
     def main_format(m_diff, m_depth):
         indent = REPLACER * (m_depth * SPACES_COUNT)
         closing_brace_indent = (
