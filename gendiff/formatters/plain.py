@@ -1,4 +1,4 @@
-def plain(diff):
+def plain(diff):  # noqa: C901
     result = [] 
     
     def format_value(value):
