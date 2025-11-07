@@ -16,12 +16,10 @@ def get_node(status, name, value, value2=None, children=None):
     return node
 
 
-def stylish(diff, depth=0):
-
-    # здесь мы пригоняем в нужный вид value из диффа
-    # (либо возвращаем в нужном состоянии либо запускаем
-    #  рекурсию для разворота вложенности)
-    def format_value(f_value, f_depth):
+def stylish(diff, depth=0):  # noqa: C901
+    def format_value(f_value, f_depth):  # noqa: C901
+        if isinstance(f_value, (str, int)):
+            return f_value
         if isinstance(f_value, dict):
             if f_value.get("status") == "modified":
                 return {
@@ -30,33 +28,26 @@ def stylish(diff, depth=0):
                 }
             elif f_value.get("children"):
                 return main_format(f_value["children"], f_depth + 1)
-            elif not f_value.get("children"):
-                if isinstance(f_value.get("value"), dict):
-                    result = []
-                    for inner_k, inner_v in f_value["value"].items():
-                        new_val = diff_unchanged(inner_k, inner_v)
-                        result.append(new_val)
-                        
-                    formatted_result = main_format(result, f_depth + 1)
-                    str_result = formatted_result
-                    return str_result
-                elif not f_value.get('value') and not isinstance(f_value, dict):
-                    return f_value
-                elif f_value.get('status'):
-                    return f_value['value']
-                
-                else:
-                    if len(f_value) > 1:
-                        result = []
-                        for k, v in f_value.items():
-                            result.append(get_node('unchanged', k, v))
-                        return result
-                    else:
-                        for k, v in f_value.items():
-                            return main_format(get_node('unchanged',
-                                                         k, v), f_depth)
-        elif isinstance(f_value, (str, int)):
-            return f_value
+            if isinstance(f_value.get("value"), dict):
+                result = []
+                for inner_k, inner_v in f_value["value"].items():
+                    new_val = diff_unchanged(inner_k, inner_v)
+                    result.append(new_val)  
+                formatted_result = main_format(result, f_depth + 1)
+                str_result = formatted_result
+                return str_result
+            elif not f_value.get('value') and not isinstance(f_value, dict):
+                return f_value
+            elif f_value.get('status'):
+                return f_value['value']
+            if len(f_value) > 1:
+                result = []
+                for k, v in f_value.items():
+                    result.append(get_node('unchanged', k, v))
+                    return result
+            for k, v in f_value.items():
+                return main_format(get_node('unchanged',
+                                             k, v), f_depth)
             
     def main_format(m_diff, m_depth):
         indent = REPLACER * (m_depth * SPACES_COUNT)
@@ -73,22 +64,19 @@ def stylish(diff, depth=0):
                 formatted_value = inner_diff
             else:
                 formatted_value = format_value(inner_diff, inner_depth)
-                
             match status:
                 # 9/10
                 # каждый раз тут начинается проблема:
                 # форматтед велью делает что?? он то
-                case "unchanged":
-                    lines.append(f"{indent}    {name}: {formatted_value}")
                 case "added":
                     lines.append(f"{indent}  + {name}: {formatted_value}")
                 case "deleted":
                     lines.append(f"{indent}  - {name}: {formatted_value}")
                 case "modified":
-                    lines.append(f"{indent}  - {name}: {formatted_value['old_value']}")
-                    lines.append(f"{indent}  + {name}: {formatted_value['new_value']}")
-                case "nested":
-                    lines.append(f"{indent}    {name}: {formatted_value}")
+                    old_value = formatted_value['old_value']
+                    new_value = formatted_value['new_value']
+                    lines.append(f"{indent}  - {name}: {old_value}")
+                    lines.append(f"{indent}  + {name}: {new_value}")
                 case _:
                     lines.append(f"{indent}    {name}: {formatted_value}")
 
