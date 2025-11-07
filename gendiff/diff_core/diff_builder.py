@@ -23,16 +23,18 @@ def get_node(status, name, value, value2=None, children=None):
     return node
 
 
+def standart_value(value):
+    match value:
+        case True:
+            value = 'true'
+        case False:
+            value = 'false'
+        case None:
+            value = 'null'
+    return value
+
+
 def get_json_standarted(node):
-    def standart_value(value):
-        match value:
-            case True:
-                value = 'true'
-            case False:
-                value = 'false'
-            case None:
-                value = 'null'
-        return value
     if isinstance(node, list):
         new_node = []
         for i in node:
@@ -52,14 +54,13 @@ def get_json_standarted(node):
                 return get_node(status, name, standart_value(old_value),
                                  standart_value(new_value))
             return get_node(status, name, standart_value(value))
-        else:
-            new_children = []
-            for kid in children:
-                new_children.append(get_json_standarted(kid))
-            return get_node(status, name, value, children=new_children)
+        new_children = []
+        for kid in children:
+            new_children.append(get_json_standarted(kid))
+        return get_node(status, name, value, children=new_children)
             
 
-def generate_diff(file1: dict, file2: dict, format_name='stylish'):
+def generate_diff(file1: dict, file2: dict, format_name='stylish'):  # noqa: C901
     def wrapper(inner_file1: dict, inner_file2: dict):
         result = []
         keys_set1 = set(inner_file1.keys())
