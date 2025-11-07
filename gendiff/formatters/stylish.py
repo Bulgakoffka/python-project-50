@@ -65,9 +65,6 @@ def stylish(diff, depth=0):  # noqa: C901
             else:
                 formatted_value = format_value(inner_diff, inner_depth)
             match status:
-                # 9/10
-                # каждый раз тут начинается проблема:
-                # форматтед велью делает что?? он то
                 case "added":
                     lines.append(f"{indent}  + {name}: {formatted_value}")
                 case "deleted":

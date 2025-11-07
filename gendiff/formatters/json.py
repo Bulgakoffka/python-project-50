@@ -17,9 +17,6 @@ def get_node(status, name, value, value2=None, children=None):
 
 
 def json(diff, depth=0):  # noqa: C901
-    # здесь мы пригоняем в нужный вид value из диффа
-    # (либо возвращаем в нужном состоянии либо запускаем рекурсию
-    #  для разворота вложенности)
     def format_value(f_value, f_depth):  # noqa: C901
         if isinstance(f_value, dict):
             if f_value.get("status") == "modified":
