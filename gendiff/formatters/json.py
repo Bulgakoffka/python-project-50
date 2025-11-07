@@ -16,11 +16,11 @@ def get_node(status, name, value, value2=None, children=None):
     return node
 
 
-def json(diff, depth=0):
+def json(diff, depth=0):  # noqa: C901
     # здесь мы пригоняем в нужный вид value из диффа
     # (либо возвращаем в нужном состоянии либо запускаем рекурсию
     #  для разворота вложенности)
-    def format_value(f_value, f_depth):
+    def format_value(f_value, f_depth):  # noqa: C901
         if isinstance(f_value, dict):
             if f_value.get("status") == "modified":
                 return {
@@ -73,6 +73,8 @@ def json(diff, depth=0):
         def wrapper(inner_diff, inner_depth):
             name = inner_diff.get("name")
             status = inner_diff.get("status")
+            if isinstance(m_diff, str):
+                return f"{{\n{indent}   {m_diff}\n{closing_brace_indent}}}"
             if not isinstance(inner_diff, dict):
                 # убрать
                 formatted_value = inner_diff
@@ -80,26 +82,19 @@ def json(diff, depth=0):
                 formatted_value = format_value(inner_diff, inner_depth)
                 
             match status:
-                # 9/10
-                # каждый раз тут начинается проблема:
-                # форматтед велью делает что?? он то
-                case "unchanged":
-                    lines.append(f'{indent}    "{name}": {formatted_value}')
                 case "added":
                     lines.append(f'{indent}  + "{name}": {formatted_value}')
                 case "deleted":
                     lines.append(f'{indent}  - "{name}": {formatted_value}')
                 case "modified":
-                    lines.append(f'{indent}  - "{name}": {formatted_value['old_value']}')
-                    lines.append(f'{indent}  + "{name}": {formatted_value['new_value']}')
-                case "nested":
-                    lines.append(f'{indent}    "{name}": {formatted_value}')
+                    old_value = formatted_value['old_value']
+                    new_value = formatted_value['new_value']
+                    lines.append(f'{indent}  - "{name}": {old_value}')
+                    lines.append(f'{indent}  + "{name}": {new_value}')
                 case _:
                     lines.append(f'{indent}    "{name}": {formatted_value}')
 
         if not isinstance(m_diff, list):
-            if isinstance(m_diff, str):
-                return f"{{\n{indent}   {m_diff}\n{closing_brace_indent}}}"
             wrapper(m_diff, m_depth)
         else:
             for d in m_diff:
