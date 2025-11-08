@@ -16,76 +16,74 @@ def get_node(status, name, value, value2=None, children=None):
     return node
 
 
-def stylish(diff, depth=0):  # noqa: C901
-    def format_value(f_value, f_depth):  # noqa: C901
-        if isinstance(f_value, (str, int)):
+def format_value(f_value, f_depth):  # noqa: C901
+    if isinstance(f_value, (str, int)):
+        return f_value
+    if isinstance(f_value, dict):
+        if f_value.get("status") == "modified":
+            return {
+                "old_value": format_value(f_value["old_value"], f_depth),
+                "new_value": format_value(f_value["new_value"], f_depth),
+            }
+        elif f_value.get("children"):
+            return stylish(f_value["children"], f_depth + 1)
+        if isinstance(f_value.get("value"), dict):
+            result = []
+            for inner_k, inner_v in f_value["value"].items():
+                new_val = diff_unchanged(inner_k, inner_v)
+                result.append(new_val)  
+            formatted_result = stylish(result, f_depth + 1)
+            str_result = formatted_result
+            return str_result
+        elif not f_value.get('value') and not isinstance(f_value, dict):
             return f_value
-        if isinstance(f_value, dict):
-            if f_value.get("status") == "modified":
-                return {
-                    "old_value": format_value(f_value["old_value"], f_depth),
-                    "new_value": format_value(f_value["new_value"], f_depth),
-                }
-            elif f_value.get("children"):
-                return main_format(f_value["children"], f_depth + 1)
-            if isinstance(f_value.get("value"), dict):
-                result = []
-                for inner_k, inner_v in f_value["value"].items():
-                    new_val = diff_unchanged(inner_k, inner_v)
-                    result.append(new_val)  
-                formatted_result = main_format(result, f_depth + 1)
-                str_result = formatted_result
-                return str_result
-            elif not f_value.get('value') and not isinstance(f_value, dict):
-                return f_value
-            elif f_value.get('status'):
-                return f_value['value']
-            if len(f_value) > 1:
-                result = []
-                for k, v in f_value.items():
-                    result.append(get_node('unchanged', k, v))
-                    return result
+        elif f_value.get('status'):
+            return f_value['value']
+        if len(f_value) > 1:
+            result = []
             for k, v in f_value.items():
-                return main_format(get_node('unchanged',
-                                             k, v), f_depth)
-            
-    def main_format(m_diff, m_depth):
-        indent = REPLACER * (m_depth * SPACES_COUNT)
-        closing_brace_indent = (
-            REPLACER * ((m_depth) * SPACES_COUNT) if m_depth > 0 else ""
-        )
-        lines = []
+                result.append(get_node('unchanged', k, v))
+                return result
+        for k, v in f_value.items():
+            return stylish(get_node('unchanged',
+                                            k, v), f_depth)
 
-        def wrapper(inner_diff, inner_depth):
-            name = inner_diff.get("name")
-            status = inner_diff.get("status")
-            if not isinstance(inner_diff, dict):
-                # убрать
-                formatted_value = inner_diff
-            else:
-                formatted_value = format_value(inner_diff, inner_depth)
-            match status:
-                case "added":
-                    lines.append(f"{indent}  + {name}: {formatted_value}")
-                case "deleted":
-                    lines.append(f"{indent}  - {name}: {formatted_value}")
-                case "modified":
-                    old_value = formatted_value['old_value']
-                    new_value = formatted_value['new_value']
-                    lines.append(f"{indent}  - {name}: {old_value}")
-                    lines.append(f"{indent}  + {name}: {new_value}")
-                case _:
-                    lines.append(f"{indent}    {name}: {formatted_value}")
 
-        if not isinstance(m_diff, list):
-            if isinstance(m_diff, str):
-                return f"{{\n{indent}   {m_diff}\n{closing_brace_indent}}}"
-            wrapper(m_diff, m_depth)
+def stylish(diff, depth=0):  # noqa: C901
+    indent = REPLACER * (depth * SPACES_COUNT)
+    closing_brace_indent = (
+        REPLACER * ((depth) * SPACES_COUNT) if depth > 0 else ""
+    )
+    lines = []
+
+    def wrapper(inner_diff, inner_depth):
+        name = inner_diff.get("name")
+        status = inner_diff.get("status")
+        if not isinstance(inner_diff, dict):
+            # убрать
+            formatted_value = inner_diff
         else:
-            for d in m_diff:
-                wrapper(d, m_depth)
+            formatted_value = format_value(inner_diff, inner_depth)
+        match status:
+            case "added":
+                lines.append(f"{indent}  + {name}: {formatted_value}")
+            case "deleted":
+                lines.append(f"{indent}  - {name}: {formatted_value}")
+            case "modified":
+                old_value = formatted_value['old_value']
+                new_value = formatted_value['new_value']
+                lines.append(f"{indent}  - {name}: {old_value}")
+                lines.append(f"{indent}  + {name}: {new_value}")
+            case _:
+                lines.append(f"{indent}    {name}: {formatted_value}")
 
-        result = "" + f"\n{''}".join(lines)
-        return f"{{\n{result}\n{closing_brace_indent}}}"
+    if not isinstance(diff, list):
+        if isinstance(diff, str):
+            return f"{{\n{indent}   {diff}\n{closing_brace_indent}}}"
+        wrapper(diff, depth)
+    else:
+        for d in diff:
+            wrapper(d, depth)
 
-    return main_format(diff, depth)
+    result = "" + f"\n{''}".join(lines)
+    return f"{{\n{result}\n{closing_brace_indent}}}"
