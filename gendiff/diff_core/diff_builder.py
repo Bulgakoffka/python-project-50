@@ -58,7 +58,11 @@ def get_json_standarted(node):
         for kid in children:
             new_children.append(get_json_standarted(kid))
         return get_node(status, name, value, children=new_children)
-            
+
+
+def is_both_dict(node1, node2):
+    return isinstance(node1, dict) and isinstance(node2, dict)            
+
 
 def generate_diff(file1: dict, file2: dict, format_name='stylish'):  # noqa: C901
     def wrapper(inner_file1: dict, inner_file2: dict):
@@ -75,16 +79,14 @@ def generate_diff(file1: dict, file2: dict, format_name='stylish'):  # noqa: C90
             elif key in only_second_keys:
                 result.append(diff_added(key, inner_file2[key]))
             elif key in intercepted_keys:
-                if isinstance(inner_file1[key],
-                               dict) and isinstance(inner_file2[key], dict):
+                if is_both_dict(inner_file1[key], inner_file2[key]):
                     result.append(diff_nested(key,
                                                inner_file1[key],
                                                  inner_file2[key], wrapper))
+                elif inner_file1[key] == inner_file2[key]:
+                    result.append(diff_unchanged(key, inner_file1[key]))
                 else:
-                    if inner_file1[key] == inner_file2[key]:
-                        result.append(diff_unchanged(key, inner_file1[key]))
-                    else:
-                        result.append(diff_modified(key,
+                    result.append(diff_modified(key,
                                                      inner_file1[key],
                                                        inner_file2[key],
                                                          wrapper))
