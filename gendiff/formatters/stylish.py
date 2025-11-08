@@ -27,6 +27,8 @@ def format_value(f_value, f_depth):  # noqa: C901
             }
         elif f_value.get("children"):
             return stylish(f_value["children"], f_depth + 1)
+        elif f_value.get('status'):
+            return f_value['value']
         if isinstance(f_value.get("value"), dict):
             result = []
             for inner_k, inner_v in f_value["value"].items():
@@ -35,17 +37,13 @@ def format_value(f_value, f_depth):  # noqa: C901
             formatted_result = stylish(result, f_depth + 1)
             str_result = formatted_result
             return str_result
-        elif not f_value.get('value') and not isinstance(f_value, dict):
-            return f_value
-        elif f_value.get('status'):
-            return f_value['value']
         if len(f_value) > 1:
             result = []
             for k, v in f_value.items():
                 result.append(get_node('unchanged', k, v))
                 return result
-        for k, v in f_value.items():
-            return stylish(get_node('unchanged',
+        k, v = f_value.items()
+        return stylish(get_node('unchanged',
                                             k, v), f_depth)
 
 
