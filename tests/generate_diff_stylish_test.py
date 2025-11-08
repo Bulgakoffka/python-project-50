@@ -29,12 +29,12 @@ def get_yaml():
 @pytest.fixture
 def get_answer1():
     return """{
-- follow: False
-  host: hexlet.io
-- proxy: 123.234.53.22
-- timeout: 50
-+ timeout: 20
-+ verbose: True
+  - follow: false
+    host: hexlet.io
+  - proxy: 123.234.53.22
+  - timeout: 50
+  + timeout: 20
+  + verbose: true
 }"""
 
 
@@ -42,11 +42,11 @@ def get_answer1():
 def get_answer2():
     return """{
     common: {
-      + follow: false 
+      + follow: false
         setting1: Value 1
-      - setting2: 200 
-      - setting3: true 
-      + setting3: null 
+      - setting2: 200
+      - setting3: true
+      + setting3: null
       + setting4: blah blah
       + setting5: {
             key5: value5
