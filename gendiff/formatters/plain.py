@@ -24,7 +24,7 @@ def plain(diff):  # noqa: C901
                 status = 'removed'
                 addition = '\n'
             case 'added':
-                status = 'addded'
+                status = 'added'
                 addition = f' with value: {formatted_value1}\n'
         line = f"Property '{node_path}' was {status}{addition}"
         return line
