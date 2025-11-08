@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from gendiff.diff_core.generate_diff import generate_diff
+from gendiff.diff_core.diff_builder import generate_diff
 
 
 def test_generate_diff():
