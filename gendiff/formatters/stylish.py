@@ -43,7 +43,7 @@ def format_value(f_value, f_depth):  # noqa: C901
         return result
     for k, v in f_value.items():
         return stylish(get_node('unchanged',
-                                        k, v), f_depth)
+                                        k, v), f_depth + 1)
 
 
 def stylish(diff, depth=0):  # noqa: C901
