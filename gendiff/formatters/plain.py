@@ -31,7 +31,6 @@ def make_line(node_path, status, value1=None, value2=None):
 def plain(diff):  # noqa: C901
     result = [] 
     
-        
     path = []
 
     def wrapper(inner_diff, path):
