@@ -1,8 +1,10 @@
 from pathlib import Path
 
 import pytest
+
 from gendiff.diff_core.diff_builder import generate_diff
 from gendiff.parser import load_file
+
 
 @pytest.fixture
 def get_json():
