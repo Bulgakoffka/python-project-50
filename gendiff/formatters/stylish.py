@@ -19,32 +19,31 @@ def get_node(status, name, value, value2=None, children=None):
 def format_value(f_value, f_depth):  # noqa: C901
     if isinstance(f_value, (str, int)):
         return f_value
-    if isinstance(f_value, dict):
-        if f_value.get("status") == "modified":
-            return {
-                "old_value": format_value(f_value["old_value"], f_depth),
-                "new_value": format_value(f_value["new_value"], f_depth),
-            }
-        elif f_value.get("children"):
-            return stylish(f_value["children"], f_depth + 1)
-        elif f_value.get('status'):
-            return f_value['value']
-        if isinstance(f_value.get("value"), dict):
-            result = []
-            for inner_k, inner_v in f_value["value"].items():
-                new_val = diff_unchanged(inner_k, inner_v)
-                result.append(new_val)  
-            formatted_result = stylish(result, f_depth + 1)
-            str_result = formatted_result
-            return str_result
-        if len(f_value) > 1:
-            result = []
-            for k, v in f_value.items():
-                result.append(get_node('unchanged', k, v))
-                return result
-        k, v = f_value.items()
+    if f_value.get("status") == "modified":
+        return {
+            "old_value": format_value(f_value["old_value"], f_depth),
+            "new_value": format_value(f_value["new_value"], f_depth),
+        }
+    elif f_value.get("children"):
+        return stylish(f_value["children"], f_depth + 1)
+    if isinstance(f_value.get("value"), dict):
+        result = []
+        for inner_k, inner_v in f_value["value"].items():
+            new_val = diff_unchanged(inner_k, inner_v)
+            result.append(new_val)  
+        formatted_result = stylish(result, f_depth + 1)
+        str_result = formatted_result
+        return str_result
+    elif f_value.get('status'):
+        return f_value['value']
+    if len(f_value) > 1:
+        result = []
+        for k, v in f_value.items():
+            result.append(get_node('unchanged', k, v))
+        return result
+    for k, v in f_value.items():
         return stylish(get_node('unchanged',
-                                            k, v), f_depth)
+                                        k, v), f_depth)
 
 
 def stylish(diff, depth=0):  # noqa: C901
