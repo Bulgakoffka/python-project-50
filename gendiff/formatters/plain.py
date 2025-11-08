@@ -1,33 +1,37 @@
+def format_value(value):
+    if isinstance(value, (dict, list)):
+        return '[complex value]'
+    if value == 'true' or value == 'false' or value == 'null':
+        return value
+    elif isinstance(value, str) and not len(value):
+        return "''"
+    else:
+        return f"'{value}'"
+
+
+def make_line(node_path, status, value1=None, value2=None):
+    addition = '\n'
+    formatted_value1 = format_value(value1)
+    if value2:
+        formatted_value2 = format_value(value2)
+    match status:
+        case 'modified':
+            status = 'updated'
+            addition = f'. From {formatted_value1} to {formatted_value2}\n'
+        case 'deleted':
+            status = 'removed'
+            addition = '\n'
+        case 'added':
+            status = 'added'
+            addition = f' with value: {formatted_value1}\n'
+    line = f"Property '{node_path}' was {status}{addition}"
+    return line
+
+
 def plain(diff):  # noqa: C901
     result = [] 
     
-    def format_value(value):
-        if isinstance(value, (dict, list)):
-            return '[complex value]'
-        if value == 'true' or value == 'false' or value == 'null':
-            return value
-        elif isinstance(value, str) and not len(value):
-            return "''"
-        else:
-            return f"'{value}'"
         
-    def make_line(node_path, status, value1=None, value2=None):
-        addition = '\n'
-        formatted_value1 = format_value(value1)
-        if value2:
-            formatted_value2 = format_value(value2)
-        match status:
-            case 'modified':
-                status = 'updated'
-                addition = f'. From {formatted_value1} to {formatted_value2}\n'
-            case 'deleted':
-                status = 'removed'
-                addition = '\n'
-            case 'added':
-                status = 'added'
-                addition = f' with value: {formatted_value1}\n'
-        line = f"Property '{node_path}' was {status}{addition}"
-        return line
     path = []
 
     def wrapper(inner_diff, path):
