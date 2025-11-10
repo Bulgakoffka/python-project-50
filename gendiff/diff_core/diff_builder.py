@@ -104,8 +104,8 @@ if __name__ == "__main__":
     from pathlib import Path  # pragma: no cover
 
     base_path = Path(__file__).resolve().parent.parent.parent
-    file1 = "file3.json"
-    file2 = "file4.json"
+    file1 = "file1.json"
+    file2 = "file2.json"
 
     parsed_file1 = dict(load_file(file1))
     parsed_file2 = dict(load_file(file2))
