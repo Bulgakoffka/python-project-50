@@ -65,6 +65,8 @@ def is_both_dict(node1, node2):
 
 
 def generate_diff(file1: dict, file2: dict, format_name='stylish'):  # noqa: C901
+    loaded_file1 = load_file(file1)
+    loaded_file2 = load_file(file2)
     def wrapper(inner_file1: dict, inner_file2: dict):
         result = []
         keys_set1 = set(inner_file1.keys())
@@ -93,11 +95,11 @@ def generate_diff(file1: dict, file2: dict, format_name='stylish'):  # noqa: C90
         return result
     match format_name:
         case 'stylish':
-            return stylish(get_json_standarted(wrapper(file1, file2)))
+            return stylish(get_json_standarted(wrapper(loaded_file1, loaded_file2)))
         case 'plain':
-            return plain(get_json_standarted(wrapper(file1, file2)))
+            return plain(get_json_standarted(wrapper(loaded_file1, loaded_file2)))
         case 'json':
-            return json(get_json_standarted(wrapper(file1, file2)))
+            return json(get_json_standarted(wrapper(loaded_file1, loaded_file2)))
 
 
 if __name__ == "__main__":
