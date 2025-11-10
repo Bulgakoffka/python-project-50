@@ -7,3 +7,5 @@ rmcache:
 	find . -name "__pycache__" -type d -exec rm -rf {} \;
 run:
 	uv run python3 gendiff/diff_core/diff_builder.py
+make test-coverage:
+	uv run pytest --cov=.  --cov-report=xml:coverage.xml
