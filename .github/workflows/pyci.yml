@@ -21,9 +21,9 @@ jobs:
       - name: Run linter and pytest
         run: |
           make lint
-      #- name: Run test coverage
-       # run: |
-       #   make test-coverage
+      - name: Run test coverage
+        run: |
+         make test-coverage
       - name: SonarQubeScan
         uses: sonarsource/sonarqube-scan-action@v6
         env:
