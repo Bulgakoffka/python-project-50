@@ -39,7 +39,13 @@ def json(diff, depth=0):  # noqa: C901
                 elif not f_value.get('value') and not isinstance(f_value, dict):
                     return f_value
                 elif f_value.get('status'):
-                    return f_value['value']
+                    match f_value['value']:
+                        case 'true' | 'false' | 'null':
+                            return f_value['value']
+                        case int():
+                            return f_value['value']
+                        case _:
+                            return f'"{f_value['value']}"'
                 else:
                     if len(f_value) > 1:
                         result = []
@@ -52,13 +58,7 @@ def json(diff, depth=0):  # noqa: C901
                                                          k, v), f_depth)
         elif isinstance(f_value, (int)):
             return f_value
-        elif isinstance(f_value, str):
-            match f_value:
-                case 'true':
-                    return f_value
-                case 'null':
-                    return f_value
-            return f'"{f_value}"'
+        return f'"{f_value}"'
             
     def main_format(m_diff, m_depth):
         indent = REPLACER * (m_depth * SPACES_COUNT)
