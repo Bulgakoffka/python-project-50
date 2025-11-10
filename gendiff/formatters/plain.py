@@ -1,6 +1,8 @@
 def format_value(value):
     if isinstance(value, (dict, list)):
         return '[complex value]'
+    if isinstance(value, int):
+        return value
     if value == 'true' or value == 'false' or value == 'null':
         return value
     elif isinstance(value, str) and not len(value):
