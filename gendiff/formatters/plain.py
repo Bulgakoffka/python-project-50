@@ -12,7 +12,7 @@ def format_value(value):
 def make_line(node_path, status, value1=None, value2=None):
     addition = '\n'
     formatted_value1 = format_value(value1)
-    if value2 or value2 == '':
+    if value2 is not None:
         formatted_value2 = format_value(value2)
     match status:
         case 'modified':
