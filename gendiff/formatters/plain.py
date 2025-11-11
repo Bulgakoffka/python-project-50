@@ -1,11 +1,3 @@
-def result_cleaner(result):
-    new_result = []
-    for i in result:
-        if i != '':
-            new_result.append(i)
-    return new_result
-
-
 def format_value(value):
     if isinstance(value, (dict, list)):
         return '[complex value]'
@@ -20,20 +12,20 @@ def format_value(value):
 
 
 def make_line(node_path, status, value1=None, value2=None):
-    addition = ''
+    addition = '\n'
     formatted_value1 = format_value(value1)
     if value2 is not None:
         formatted_value2 = format_value(value2)
     match status:
         case 'modified':
             status = 'updated'
-            addition = f'. From {formatted_value1} to {formatted_value2}'
+            addition = f'. From {formatted_value1} to {formatted_value2}\n'
         case 'deleted':
             status = 'removed'
-            addition = ''
+            addition = '\n'
         case 'added':
             status = 'added'
-            addition = f' with value: {formatted_value1}'
+            addition = f' with value: {formatted_value1}\n'
     line = f"Property '{node_path}' was {status}{addition}"
     return line
 
@@ -77,5 +69,5 @@ def plain(diff):  # noqa: C901
                 path.pop(-1)
                 return make_line(inner_path, status, value)
     wrapper(diff, path)
-    cleaned_result = result_cleaner(result)
-    return "\n".join(cleaned_result)
+    string_result = "".join(result)[:-1]
+    return string_result
