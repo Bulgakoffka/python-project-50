@@ -102,17 +102,6 @@ def generate_diff(file1: dict, file2: dict, format_name='stylish'):  # noqa: C90
             diff = plain(final_diff)
         case 'json':
             diff = json(final_diff)
-    return diff
-         
-
-if __name__ == "__main__":
-    from pathlib import Path  # pragma: no cover
-
-    base_path = Path(__file__).resolve().parent.parent.parent
-    file1 = "file1.json"
-    file2 = "file2.json"
-
-    parsed_file1 = dict(load_file(file1))
-    parsed_file2 = dict(load_file(file2))
-    print(generate_diff(parsed_file1, parsed_file2, 'json'))
+    # перенести в гендиф
+    print(diff)
 
