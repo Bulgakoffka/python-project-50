@@ -94,16 +94,16 @@ def generate_diff(file1: dict, file2: dict, format_name='stylish'):  # noqa: C90
                                                        inner_file2[key],
                                                          wrapper))
         return result
+    final_diff = get_json_standarted(wrapper(loaded_file1, loaded_file2))
     match format_name:
         case 'stylish':
-            return stylish(get_json_standarted(wrapper(loaded_file1,
-                                                        loaded_file2)))
+            diff = stylish(final_diff)
         case 'plain':
-            return plain(get_json_standarted(wrapper(loaded_file1,
-                                                      loaded_file2)))
+            diff = plain(final_diff)
         case 'json':
-            return json(get_json_standarted(wrapper(loaded_file1,
-                                                     loaded_file2)))
+            diff = json(final_diff)
+    return diff
+         
 
 
 if __name__ == "__main__":
