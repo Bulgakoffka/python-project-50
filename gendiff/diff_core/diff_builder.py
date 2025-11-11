@@ -105,7 +105,6 @@ def generate_diff(file1: dict, file2: dict, format_name='stylish'):  # noqa: C90
     return diff
          
 
-
 if __name__ == "__main__":
     from pathlib import Path  # pragma: no cover
 
@@ -115,5 +114,5 @@ if __name__ == "__main__":
 
     parsed_file1 = dict(load_file(file1))
     parsed_file2 = dict(load_file(file2))
-    print(generate_diff(parsed_file1, parsed_file2, 'plain'))
+    print(generate_diff(parsed_file1, parsed_file2, 'json'))
 

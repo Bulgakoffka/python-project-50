@@ -1,4 +1,4 @@
-from gendiff.diff_core.diff_actions import diff_unchanged
+import json as _json
 
 REPLACER = " "
 SPACES_COUNT = 4
@@ -16,90 +16,7 @@ def get_node(status, name, value, value2=None, children=None):
     return node
 
 
-def json(diff, depth=0):  # noqa: C901
-    def format_value(f_value, f_depth):  # noqa: C901
-        if isinstance(f_value, dict):
-            if f_value.get("status") == "modified":
-                return {
-                    "old_value": format_value(f_value["old_value"], f_depth),
-                    "new_value": format_value(f_value["new_value"], f_depth),
-                }
-            elif f_value.get("children"):
-                return main_format(f_value["children"], f_depth + 1)
-            elif not f_value.get("children"):
-                if isinstance(f_value.get("value"), dict):
-                    result = []
-                    for inner_k, inner_v in f_value["value"].items():
-                        new_val = diff_unchanged(inner_k, inner_v)
-                        result.append(new_val)
-                        
-                    formatted_result = main_format(result, f_depth + 1)
-                    str_result = formatted_result
-                    return str_result
-                elif not f_value.get('value') and not isinstance(f_value, dict):
-                    return f_value
-                elif f_value.get('status'):
-                    match f_value['value']:
-                        case 'true' | 'false' | 'null':
-                            return f_value['value']
-                        case int():
-                            return f_value['value']
-                        case _:
-                            return f'"{f_value['value']}"'
-                else:
-                    if len(f_value) > 1:
-                        result = []
-                        for k, v in f_value.items():
-                            result.append(get_node('unchanged', k, v))
-                        return result
-                    else:
-                        for k, v in f_value.items():
-                            return main_format(get_node('unchanged',
-                                                         k, v), f_depth)
-        elif isinstance(f_value, (int)):
-            return f_value
-        return f'"{f_value}"'
-            
-    def main_format(m_diff, m_depth):
-        indent = REPLACER * (m_depth * SPACES_COUNT)
-        closing_brace_indent = (
-            REPLACER * ((m_depth) * SPACES_COUNT) if m_depth > 0 else ""
-        )
-        lines = []
-
-        def wrapper(inner_diff, inner_depth):
-            name = inner_diff.get("name")
-            status = inner_diff.get("status")
-            if isinstance(m_diff, str):
-                return f"{{\n{indent}   {m_diff}\n{closing_brace_indent}}}"
-            if not isinstance(inner_diff, dict):
-                # убрать
-                formatted_value = inner_diff
-            else:
-                formatted_value = format_value(inner_diff, inner_depth)
-                
-            match status:
-                case "added":
-                    lines.append(f'{indent}  + "{name}": {formatted_value}')
-                case "deleted":
-                    lines.append(f'{indent}  - "{name}": {formatted_value}')
-                case "modified":
-                    old_value = formatted_value['old_value']
-                    new_value = formatted_value['new_value']
-                    lines.append(f'{indent}  - "{name}": {old_value}')
-                    lines.append(f'{indent}  + "{name}": {new_value}')
-                case _:
-                    lines.append(f'{indent}    "{name}": {formatted_value}')
-
-        if not isinstance(m_diff, list):
-            wrapper(m_diff, m_depth)
-        else:
-            for d in m_diff:
-                wrapper(d, m_depth)
-
-        result = "" + f",\n{''}".join(lines)
-        return f"{{\n{result}\n{closing_brace_indent}}}"
-
-    return main_format(diff, depth)
+def json(diff, depth=0):
+    return _json.dumps(diff, indent=4)
 
 
