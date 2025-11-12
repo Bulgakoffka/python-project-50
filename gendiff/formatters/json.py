@@ -16,7 +16,7 @@ def get_node(status, name, value, value2=None, children=None):
     return node
 
 
-def json(diff, depth=0):
+def json(diff):
     return _json.dumps(diff, indent=4)
 
 
