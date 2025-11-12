@@ -8,9 +8,9 @@ from gendiff.parser import arg_parser  # pragma: no cover
 
 def main():  # pragma: no cover
     args = arg_parser()
+    format_name = args.format
     first_file = args.first_file
     second_file = args.second_file
-    format_name = args.format_name
     generated_diff = generate_diff(first_file, second_file, format_name)
     print(generated_diff)
 
