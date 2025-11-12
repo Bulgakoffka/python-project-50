@@ -96,13 +96,12 @@ def generate_diff(file1: dict, file2: dict, format_name='None'):  # noqa: C901
         return result
     final_diff = get_json_standarted(wrapper(loaded_file1, loaded_file2))
     match format_name:
-        
+        case 'stylish':
+            diff = stylish(final_diff)
         case 'plain':
             diff = plain(final_diff)
         case 'json':
             diff = json(final_diff)
-        case 'lala':
-            diff = 'incorrect formatter name'
         case _:
-            diff = stylish(final_diff)
+            diff = 'incorrect formatter name'
     return diff
