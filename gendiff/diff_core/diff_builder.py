@@ -64,7 +64,7 @@ def is_both_dict(node1, node2):
     return isinstance(node1, dict) and isinstance(node2, dict)            
 
 
-def generate_diff(file1: dict, file2: dict, format_name='stylish'):  # noqa: C901
+def generate_diff(file1: dict, file2: dict, format_name='None'):  # noqa: C901
     loaded_file1 = load_file(file1)
     loaded_file2 = load_file(file2)
 
@@ -96,12 +96,12 @@ def generate_diff(file1: dict, file2: dict, format_name='stylish'):  # noqa: C90
         return result
     final_diff = get_json_standarted(wrapper(loaded_file1, loaded_file2))
     match format_name:
-        case 'stylish':
+        case '_':
             diff = stylish(final_diff)
         case 'plain':
             diff = plain(final_diff)
         case 'json':
             diff = json(final_diff)
-        case _:
+        case 'lala':
             return 'incorrect formatter name'
     return diff
