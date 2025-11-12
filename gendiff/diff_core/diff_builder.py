@@ -64,7 +64,7 @@ def is_both_dict(node1, node2):
     return isinstance(node1, dict) and isinstance(node2, dict)            
 
 
-def generate_diff(file1: dict, file2: dict, format_name='stylish'):  # noqa: C901
+def generate_diff(file1: dict, file2: dict, format_name='plain'):  # noqa: C901
     loaded_file1 = load_file(file1)
     loaded_file2 = load_file(file2)
 
