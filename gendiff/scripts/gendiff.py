@@ -11,9 +11,8 @@ def main():  # pragma: no cover
     first_file = args.first_file
     second_file = args.second_file
     format_name = args.format_name
-    if format_name:
-        generated_diff = generate_diff(first_file, second_file, format_name)
-        print(generated_diff)
+    generated_diff = generate_diff(first_file, second_file, format_name)
+    print(generated_diff)
 
 
 if __name__ == "__main__":
