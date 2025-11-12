@@ -103,5 +103,5 @@ def generate_diff(file1: dict, file2: dict, format_name='None'):  # noqa: C901
         case 'json':
             diff = json(final_diff)
         case 'lala':
-            return 'incorrect formatter name'
+            diff = 'incorrect formatter name'
     return diff
