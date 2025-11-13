@@ -3,7 +3,6 @@ from pathlib import Path
 import pytest
 
 from gendiff.diff_core.diff_builder import generate_diff
-from gendiff.parser import load_file
 
 
 @pytest.fixture
@@ -88,28 +87,20 @@ def get_answer2():
 
 def test_generate_diff_json(get_json, get_answer1):
     file1, file2, _, _ = get_json
-    parsed_file1 = dict(load_file(file1))
-    parsed_file2 = dict(load_file(file2))
-    assert generate_diff(parsed_file1, parsed_file2, 'stylish') == get_answer1
+    assert generate_diff(file1, file2, 'stylish') == get_answer1
 
 
 def test_generate_diff_json_recursive(get_json, get_answer2):
     _, _, file3, file4 = get_json
-    parsed_file3 = dict(load_file(file3))
-    parsed_file4 = dict(load_file(file4))
-    assert generate_diff(parsed_file3, parsed_file4, 'stylish') == get_answer2
+    assert generate_diff(file3, file4, 'stylish') == get_answer2
 
 
 def test_generate_diff_yaml(get_yaml, get_answer1):
     file1, file2, _, _ = get_yaml
-    parsed_file1 = dict(load_file(file1))
-    parsed_file2 = dict(load_file(file2))
-    assert generate_diff(parsed_file1, parsed_file2, 'stylish') == get_answer1
+    assert generate_diff(file1, file2, 'stylish') == get_answer1
 
 
 def test_generate_diff_yaml_recursive(get_yaml, get_answer2):
     _, _, file3, file4 = get_yaml
-    parsed_file3 = dict(load_file(file3))
-    parsed_file4 = dict(load_file(file4))
-    assert generate_diff(parsed_file3, parsed_file4, 'stylish') == get_answer2
+    assert generate_diff(file3, file4, 'stylish') == get_answer2
 

@@ -3,7 +3,6 @@ from pathlib import Path
 import pytest
 
 from gendiff.diff_core.diff_builder import generate_diff
-from gendiff.parser import load_file
 
 
 @pytest.fixture
@@ -38,19 +37,14 @@ Property 'common.setting6.ops' was added with value: 'vops'
 Property 'group1.baz' was updated. From 'bas' to 'bars'
 Property 'group1.nest' was updated. From [complex value] to 'str'
 Property 'group2' was removed
-Property 'group3' was added with value: [complex value]
-"""
+Property 'group3' was added with value: [complex value]"""
 
 
 def test_generate_diff_json(get_json, get_answer):
     _, _, file3, file4 = get_json
-    parsed_file3 = dict(load_file(file3))
-    parsed_file4 = dict(load_file(file4))
-    assert generate_diff(parsed_file3, parsed_file4, 'plain') == get_answer
+    assert generate_diff(file3, file4, 'plain') == get_answer
 
 
 def test_generate_diff_yaml(get_yaml, get_answer):
     _, _, file3, file4 = get_yaml
-    parsed_file3 = dict(load_file(file3))
-    parsed_file4 = dict(load_file(file4))
-    assert generate_diff(parsed_file3, parsed_file4, 'plain') == get_answer
+    assert generate_diff(file3, file4, 'plain') == get_answer

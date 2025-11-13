@@ -1,115 +1,199 @@
-from pathlib import Path
 
 import pytest
 
 from gendiff.diff_core.diff_builder import generate_diff
-from gendiff.parser import load_file
 
 
 @pytest.fixture
 def get_json():
-    base_path = Path(__file__).resolve().parent.parent
-    file1 = base_path / "tests" / "test_data" / "file1.json"
-    file2 = base_path / "tests" / "test_data" / "file2.json"
-    file3 = base_path / "tests" / "test_data" / "file3.json"
-    file4 = base_path / "tests" / "test_data" / "file4.json"
+    file1 = "file1.json"
+    file2 = "file2.json"
+    file3 = "file3.json"
+    file4 = "file4.json"
     return file1, file2, file3, file4
 
 
 @pytest.fixture
 def get_yaml():
-    base_path = Path(__file__).resolve().parent.parent
-    file1 = base_path / "tests" / "test_data" / "file1.yaml"
-    file2 = base_path / "tests" / "test_data" / "file2.yaml"
-    file3 = base_path / "tests" / "test_data" / "file3.yaml"
-    file4 = base_path / "tests" / "test_data" / "file4.yaml"
+    file1 = "file1.yaml"
+    file2 = "file2.yaml"
+    file3 = "file3.yaml"
+    file4 = "file4.yaml"
     return file1, file2, file3, file4
 
 
 @pytest.fixture
 def get_answer1():
-    return """{
-  - "follow": false,
-    "host": "hexlet.io",
-  - "proxy": "123.234.53.22",
-  - "timeout": 50,
-  + "timeout": 20,
-  + "verbose": true
-}"""
+    return """[
+    {
+        "status": "deleted",
+        "name": "follow",
+        "value": "false"
+    },
+    {
+        "status": "unchanged",
+        "name": "host",
+        "value": "hexlet.io"
+    },
+    {
+        "status": "deleted",
+        "name": "proxy",
+        "value": "123.234.53.22"
+    },
+    {
+        "status": "modified",
+        "name": "timeout",
+        "old_value": 50,
+        "new_value": 20
+    },
+    {
+        "status": "added",
+        "name": "verbose",
+        "value": "true"
+    }
+]"""
 
 
 @pytest.fixture
 def get_answer2():
-    return """{
-    "common": {
-      + "follow": false,
-        "setting1": "Value 1",
-      - "setting2": 200,
-      - "setting3": "true",
-      + "setting3": "null",
-      + "setting4": "blah blah",
-      + "setting5": {
-            "key5": "value5"
-        },
-        "setting6": {
-            "doge": {
-              - "wow": "",
-              + "wow": "so much"
+    return """[
+    {
+        "status": "nested",
+        "name": "common",
+        "children": [
+            {
+                "status": "added",
+                "name": "follow",
+                "value": "false"
             },
-            "key": "value",
-          + "ops": "vops"
-        }
-    },
-    "group1": {
-      - "baz": "bas",
-      + "baz": "bars",
-        "foo": "bar",
-      - "nest": {
-        "key": "value"
-    },
-      + "nest": "str"
-    },
-  - "group2": {
-        "abc": 12345,
-        "deep": {
-            "id": 45
-        }
-    },
-  + "group3": {
-        "deep": {
-            "id": {
-                "number": 45
+            {
+                "status": "unchanged",
+                "name": "setting1",
+                "value": "Value 1"
+            },
+            {
+                "status": "deleted",
+                "name": "setting2",
+                "value": 200
+            },
+            {
+                "status": "modified",
+                "name": "setting3",
+                "old_value": "true",
+                "new_value": "null"
+            },
+            {
+                "status": "added",
+                "name": "setting4",
+                "value": "blah blah"
+            },
+            {
+                "status": "added",
+                "name": "setting5",
+                "value": {
+                    "key5": "value5"
+                }
+            },
+            {
+                "status": "nested",
+                "name": "setting6",
+                "children": [
+                    {
+                        "status": "nested",
+                        "name": "doge",
+                        "children": [
+                            {
+                                "status": "modified",
+                                "name": "wow",
+                                "old_value": "",
+                                "new_value": "so much"
+                            }
+                        ],
+                        "value": null
+                    },
+                    {
+                        "status": "unchanged",
+                        "name": "key",
+                        "value": "value"
+                    },
+                    {
+                        "status": "added",
+                        "name": "ops",
+                        "value": "vops"
+                    }
+                ],
+                "value": null
             }
-        },
-        "fee": 100500
+        ],
+        "value": null
+    },
+    {
+        "status": "nested",
+        "name": "group1",
+        "children": [
+            {
+                "status": "modified",
+                "name": "baz",
+                "old_value": "bas",
+                "new_value": "bars"
+            },
+            {
+                "status": "unchanged",
+                "name": "foo",
+                "value": "bar"
+            },
+            {
+                "status": "modified",
+                "name": "nest",
+                "old_value": {
+                    "key": "value"
+                },
+                "new_value": "str"
+            }
+        ],
+        "value": null
+    },
+    {
+        "status": "deleted",
+        "name": "group2",
+        "value": {
+            "abc": 12345,
+            "deep": {
+                "id": 45
+            }
+        }
+    },
+    {
+        "status": "added",
+        "name": "group3",
+        "value": {
+            "deep": {
+                "id": {
+                    "number": 45
+                }
+            },
+            "fee": 100500
+        }
     }
-}"""
+]"""
 
 
 def test_generate_diff_json(get_json, get_answer1):
     file1, file2, _, _ = get_json
-    parsed_file1 = dict(load_file(file1))
-    parsed_file2 = dict(load_file(file2))
-    assert generate_diff(parsed_file1, parsed_file2, 'json') == get_answer1
+    assert generate_diff(file1, file2, 'json') == get_answer1
 
 
 def test_generate_diff_json_recursive(get_json, get_answer2):
     _, _, file3, file4 = get_json
-    parsed_file3 = dict(load_file(file3))
-    parsed_file4 = dict(load_file(file4))
-    assert generate_diff(parsed_file3, parsed_file4, 'json') == get_answer2
+    assert generate_diff(file3, file4, 'json') == get_answer2
 
 
 def test_generate_diff_yaml(get_yaml, get_answer1):
     file1, file2, _, _ = get_yaml
-    parsed_file1 = dict(load_file(file1))
-    parsed_file2 = dict(load_file(file2))
-    assert generate_diff(parsed_file1, parsed_file2, 'json') == get_answer1
+    assert generate_diff(file1, file2, 'json') == get_answer1
 
 
 def test_generate_diff_yaml_recursive(get_yaml, get_answer2):
     _, _, file3, file4 = get_yaml
-    parsed_file3 = dict(load_file(file3))
-    parsed_file4 = dict(load_file(file4))
-    assert generate_diff(parsed_file3, parsed_file4, 'json') == get_answer2
+    assert generate_diff(file3, file4, 'json') == get_answer2
 
